@@ -318,9 +318,9 @@ class App {
         if (this.columnSplitter) this.columnSplitter.destroy();
         if (this.ioSplitter) this.ioSplitter.destroy();
 
-        this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
-            sizes: [20, 30, 50],
-            minSize: minimise ? [0, 0, 0] : [240, 310, 450],
+        this.columnSplitter = Split(["#recipe", "#IO"], {
+            sizes: [28, 72],
+            minSize: minimise ? [0, 0] : [280, 450],
             gutterSize: 4,
             expandToMin: true,
             onDrag: debounce(function() {
@@ -629,7 +629,8 @@ class App {
      * Resets the splitter positions to default.
      */
     resetLayout() {
-        this.columnSplitter.setSizes([20, 30, 50]);
+        document.body.classList.remove("recipe-collapsed");
+        this.columnSplitter.setSizes([28, 72]);
         this.ioSplitter.setSizes([50, 50]);
         this.adjustComponentSizes();
     }

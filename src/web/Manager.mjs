@@ -147,7 +147,13 @@ class Manager {
 
         // Operations
         this.addMultiEventListener("#search", "keyup paste search", this.ops.searchOperations, this.ops);
-        this.addDynamicListener(".op-list li.operation", "dblclick", this.ops.operationDblclick, this.ops);
+        this.addDynamicListener("#search-results li.operation", "click", this.ops.operationClick, this.ops);
+        document.addEventListener("keydown", this.ops.operationPickerKeyboard.bind(this.ops));
+        document.getElementById("open-operation-picker").addEventListener("click", this.ops.openOperationPicker.bind(this.ops));
+        document.getElementById("add-operation").addEventListener("click", this.ops.openOperationPicker.bind(this.ops));
+        document.getElementById("empty-recipe-add").addEventListener("click", this.ops.openOperationPicker.bind(this.ops));
+        document.getElementById("close-operation-picker").addEventListener("click", this.ops.closeOperationPicker.bind(this.ops));
+        document.getElementById("close-operation-picker-icon").addEventListener("click", this.ops.closeOperationPicker.bind(this.ops));
         document.getElementById("edit-favourites").addEventListener("click", this.ops.editFavouritesClick.bind(this.ops));
         document.getElementById("save-favourites").addEventListener("click", this.ops.saveFavouritesClick.bind(this.ops));
         document.getElementById("reset-favourites").addEventListener("click", this.ops.resetFavouritesClick.bind(this.ops));
@@ -167,6 +173,8 @@ class Manager {
         this.addDynamicListener("textarea.arg", "dragover", this.recipe.textArgDragover, this.recipe);
         this.addDynamicListener("textarea.arg", "dragleave", this.recipe.textArgDragLeave, this.recipe);
         this.addDynamicListener("textarea.arg", "drop", this.recipe.textArgDrop, this.recipe);
+        document.getElementById("collapse-recipe").addEventListener("click", this.recipe.collapseSidebar.bind(this.recipe));
+        document.getElementById("expand-recipe").addEventListener("click", this.recipe.expandSidebar.bind(this.recipe));
 
         // Input
         document.getElementById("reset-layout").addEventListener("click", this.app.resetLayout.bind(this.app));

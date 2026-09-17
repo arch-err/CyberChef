@@ -25,7 +25,9 @@ module.exports = {
     "App loaded": browser => {
         browser.useCss();
         // Check that various important elements are loaded
-        browser.expect.element("#operations").to.be.visible;
+        browser.expect.element("#operations").to.be.present;
+        browser.expect.element("#operations").to.not.be.visible;
+        browser.expect.element("#open-operation-picker").to.be.visible;
         browser.expect.element("#recipe").to.be.visible;
         browser.expect.element("#input").to.be.present;
         browser.expect.element("#output").to.be.present;
@@ -36,16 +38,39 @@ module.exports = {
         browser.expect.element("#output-text").to.be.visible;
     },
 
-    "Dark theme is the first-run default": browser => {
+    "Theme is always dark": browser => {
         browser
             .useCss()
             .expect.element("html").to.have.attribute("class").which.contains("dark");
         browser.expect.element("#theme").to.have.value.that.equals("dark");
     },
 
+    "Operation picker opens with Ctrl+K": browser => {
+        browser.perform(function() {
+            return this.actions({async: true})
+                .keyDown(browser.Keys.CONTROL)
+                .keyDown("k")
+                .keyUp("k")
+                .keyUp(browser.Keys.CONTROL);
+        });
+
+        browser
+            .useCss()
+            .waitForElementVisible("#operations", 1000)
+            .execute(() => document.activeElement.id, [], function({value}) {
+                browser.expect(value).to.equal("search");
+            });
+
+        browser.click("#close-operation-picker-icon");
+    },
+
     "Operations loaded": browser => {
-        browser.useXpath();
-        // Check that an operation in every category has been populated
+        browser
+            .useCss()
+            .click("#add-operation")
+            .waitForElementVisible("#operations", 1000)
+            .useXpath();
+        // Check that the complete operation catalogue is available in the picker
         browser.expect.element("//li[contains(@class, 'operation') and text()='To Base64']").to.be.present;
         browser.expect.element("//li[contains(@class, 'operation') and text()='To Binary']").to.be.present;
         browser.expect.element("//li[contains(@class, 'operation') and text()='AES Decrypt']").to.be.present;
@@ -64,14 +89,16 @@ module.exports = {
         browser.expect.element("//li[contains(@class, 'operation') and text()='Disassemble x86']").to.be.present;
         browser.expect.element("//li[contains(@class, 'operation') and text()='Register']").to.be.present;
         browser.expect.element("//li[contains(@class, 'operation') and text()='Escape Smart Characters']").to.be.present;
+
+        browser.useCss().click("#close-operation-picker-icon");
     },
 
     "Operation popover descriptions render HTML safely": browser => {
-        const favouritesCat = "//a[contains(@class, 'category-title') and contains(@data-target, '#catFavourites')]",
-            op = "//ul[@id='search-results']//li[contains(@class, 'operation') and contains(., 'Escape Smart Characters')]";
+        const op = "//ul[@id='search-results']//li[contains(@class, 'operation') and contains(., 'Escape Smart Characters')]";
 
         browser
             .useCss()
+            .click("#add-operation")
             .clearValue("#search")
             .setValue("#search", "Escape Smart Characters")
             .useXpath()
@@ -83,12 +110,9 @@ module.exports = {
 
         browser
             .useCss()
-            .moveToElement("#operations .title", 1, 1)
+            .moveToElement("#operation-picker-title", 1, 1)
             .waitForElementNotPresent(".popover-body", 1000)
-            .clearValue("#search")
-            .useXpath()
-            .getLocationInView(favouritesCat)
-            .click(favouritesCat);
+            .click("#close-operation-picker-icon");
     },
 
     "Recipe can be run": browser => {
@@ -97,16 +121,20 @@ module.exports = {
 
         // Check that operation is visible
         browser
+            .useCss()
+            .click("#add-operation")
+            .clearValue("#search")
+            .setValue("#search", "To Hex")
             .useXpath()
             .expect.element(toHex).to.be.visible;
 
-        // Add it to the recipe by double clicking
+        // Add it to the recipe from the operation picker
         browser
             .useXpath()
             .moveToElement(toHex, 10, 10)
             .useCss()
             .waitForElementVisible(".popover-body", 1000)
-            .doubleClick("xpath", toHex);
+            .click("xpath", toHex);
 
         // Confirm that it has been added to the recipe
         browser
@@ -320,32 +348,21 @@ module.exports = {
     },
 
     "Move around the UI": browser => {
-        const otherCat = "//a[contains(@class, 'category-title') and contains(@data-target, '#catOther')]",
-            genUUID = "//li[contains(@class, 'operation') and text()='Generate UUID']";
+        const genUUID = "//li[contains(@class, 'operation') and text()='Generate UUID']";
 
-        browser.useXpath();
-
-        // Scroll to a lower category
-        browser
-            .getLocationInView(otherCat)
-            .expect.element(otherCat).to.be.visible;
-
-        // Open category
         browser
             .useCss()
             .waitForElementNotVisible("#snackbar-container", 10000)
+            .click("#add-operation")
+            .setValue("#search", "Generate UUID")
             .useXpath()
-            .click(otherCat)
             .expect.element(genUUID).to.be.visible;
 
         // Add op to recipe
-        /* mouseButtonUp drops wherever the actual cursor is, not necessarily in the right place,
-        so we can't test Sortable.js properly using Nightwatch. html-dnd doesn't work either.
-        Instead of relying on drag and drop, we double click on the op to load it. */
         browser
             .getLocationInView(genUUID)
             .moveToElement(genUUID, 10, 10)
-            .doubleClick("xpath", genUUID)
+            .click(genUUID)
             .useCss()
             .waitForElementVisible(".operation .op-title", 1000)
             .waitForElementNotVisible("#stale-indicator", 1000)
@@ -358,10 +375,25 @@ module.exports = {
         // Search for an op
         browser
             .useCss()
+            .click("#add-operation")
             .clearValue("#search")
             .setValue("#search", "md5")
             .useXpath()
-            .waitForElementVisible("//ul[@id='search-results']//b[text()='MD5']", 1000);
+            .waitForElementVisible("//ul[@id='search-results']//b[text()='MD5']", 1000)
+            .useCss()
+            .click("#close-operation-picker-icon");
+    },
+
+    "Recipe sidebar can be folded": browser => {
+        browser
+            .useCss()
+            .click("#collapse-recipe")
+            .waitForElementVisible("#expand-recipe", 1000)
+            .expect.element("body").to.have.attribute("class").which.contains("recipe-collapsed");
+
+        browser
+            .click("#expand-recipe")
+            .waitForElementNotVisible("#expand-recipe", 1000);
     },
 
     "Alert bar": browser => {

@@ -33,6 +33,25 @@ class RecipeWaiter {
     }
 
 
+    /** Collapses the recipe sidebar while leaving a narrow restore control. */
+    collapseSidebar() {
+        document.body.classList.add("recipe-collapsed");
+        this.app.initialiseSplitter(true);
+        this.app.columnSplitter.collapse(0);
+        this.app.adjustComponentSizes();
+        document.getElementById("expand-recipe").focus();
+    }
+
+
+    /** Restores the recipe sidebar to its default working width. */
+    expandSidebar() {
+        document.body.classList.remove("recipe-collapsed");
+        this.app.initialiseSplitter(false);
+        this.app.adjustComponentSizes();
+        document.getElementById("collapse-recipe").focus();
+    }
+
+
     /**
      * Sets up the drag and drop capability for operations in the operations and recipe areas.
      */

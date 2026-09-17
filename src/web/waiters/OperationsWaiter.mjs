@@ -42,10 +42,11 @@ class OperationsWaiter {
             ops = document.querySelectorAll("#search-results li");
             if (ops.length) {
                 selected = this.getSelectedOp(ops);
-                if (selected > -1) {
-                    this.manager.recipe.addOperation(ops[selected].innerHTML);
-                }
+                const operation = ops[selected > -1 ? selected : 0];
+                this.manager.recipe.addOperation(operation.textContent);
+                this.closeOperationPicker();
             }
+            return;
         }
 
         /**
@@ -101,16 +102,80 @@ class OperationsWaiter {
             document.querySelector("#search").removeAttribute("aria-activedescendant");
 
             $("#categories .show").collapse("hide");
-            if (str) {
-                const matchedOps = this.filterOperations(str, true);
-                const matchedOpsHtml = matchedOps
-                    .map((operation, idx) => operation.toStubHtml(false, `search-result-${idx}`))
-                    .join("");
-
-                searchResultsEl.innerHTML = matchedOpsHtml;
-                searchResultsEl.dispatchEvent(this.manager.oplistcreate);
-            }
+            this.renderOperationResults(str);
         }
+    }
+
+
+    /**
+     * Renders the operation picker results. An empty query shows the complete catalogue.
+     *
+     * @param {string} query
+     */
+    renderOperationResults(query = "") {
+        const searchResultsEl = document.getElementById("search-results");
+        let matchedOps;
+
+        if (query) {
+            matchedOps = this.filterOperations(query, true);
+        } else {
+            matchedOps = Object.keys(this.app.operations)
+                .sort((a, b) => a.localeCompare(b))
+                .map(name => new HTMLOperation(name, this.app.operations[name], this.app, this.manager));
+        }
+
+        searchResultsEl.innerHTML = matchedOps
+            .map((operation, idx) => operation.toStubHtml(false, `search-result-${idx}`))
+            .join("");
+        searchResultsEl.dispatchEvent(this.manager.oplistcreate);
+    }
+
+
+    /** Opens the operation picker and moves focus directly to search. */
+    openOperationPicker(e) {
+        e?.preventDefault();
+        const picker = document.getElementById("operations");
+        const search = document.getElementById("search");
+
+        picker.classList.add("is-open");
+        picker.setAttribute("aria-hidden", "false");
+        document.body.classList.add("operation-picker-open");
+        search.value = "";
+        this.renderOperationResults();
+        search.focus();
+    }
+
+
+    /** Closes the operation picker and returns focus to the add button. */
+    closeOperationPicker(e) {
+        e?.preventDefault();
+        const picker = document.getElementById("operations");
+
+        picker.classList.remove("is-open");
+        picker.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("operation-picker-open");
+        document.getElementById("add-operation")?.focus();
+    }
+
+
+    /** Handles the global command-palette shortcut and escape key. */
+    operationPickerKeyboard(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+            e.preventDefault();
+            this.openOperationPicker();
+        } else if (e.key === "Escape" && document.getElementById("operations").classList.contains("is-open")) {
+            this.closeOperationPicker();
+        }
+    }
+
+
+    /** Adds a clicked picker result to the recipe. */
+    operationClick(e) {
+        const operation = e.target.closest("li.operation");
+        if (!operation || !operation.closest("#search-results")) return;
+
+        this.manager.recipe.addOperation(operation.textContent);
+        this.closeOperationPicker();
     }
 
 
@@ -187,7 +252,10 @@ class OperationsWaiter {
         this.manager.recipe.createSortableSeedList(e.target);
 
         // Populate ops total
-        document.querySelector("#operations .title .op-count").innerText = Object.keys(this.app.operations).length;
+        document.querySelectorAll("#operations .op-count")
+            .forEach(el => {
+                el.innerText = Object.keys(this.app.operations).length;
+            });
 
         this.enableOpsListPopovers(e.target);
     }
@@ -230,7 +298,7 @@ class OperationsWaiter {
      * @param {event} e
      */
     operationDblclick(e) {
-        const li = e.target;
+        const li = e.target.closest("li.operation");
 
         this.manager.recipe.addOperation(li.textContent);
     }

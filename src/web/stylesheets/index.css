@@ -38,3 +38,6 @@
 /* Operations */
 @import "./operations/diff.css";
 @import "./operations/json.css";
+
+/* Custom application shell */
+@import "./themes/_workbench.css";

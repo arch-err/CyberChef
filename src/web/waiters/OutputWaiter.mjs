@@ -1537,7 +1537,6 @@ class OutputWaiter {
             document.body.classList.add("output-maximised");
             this.app.initialiseSplitter(true);
             this.app.columnSplitter.collapse(0);
-            this.app.columnSplitter.collapse(1);
             this.app.ioSplitter.collapse(0);
 
             $(el).attr("data-original-title", "Restore output pane");
