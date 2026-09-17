@@ -36,6 +36,13 @@ module.exports = {
         browser.expect.element("#output-text").to.be.visible;
     },
 
+    "Dark theme is the first-run default": browser => {
+        browser
+            .useCss()
+            .expect.element("html").to.have.attribute("class").which.contains("dark");
+        browser.expect.element("#theme").to.have.value.that.equals("dark");
+    },
+
     "Operations loaded": browser => {
         browser.useXpath();
         // Check that an operation in every category has been populated

@@ -20,7 +20,7 @@
 -->
 <!-- htmlmin:ignore -->
 <!DOCTYPE html>
-<html lang="en" class="classic">
+<html lang="en" class="dark">
     <head>
         <meta charset="UTF-8">
         <title>CyberChef</title>
@@ -36,7 +36,8 @@
 
             // Load theme before the preloader is shown
             try {
-                document.querySelector(":root").className = (JSON.parse(localStorage.getItem("options")) || {}).theme;
+                document.querySelector(":root").className =
+                    (JSON.parse(localStorage.getItem("options")) || {}).theme || "dark";
             } catch (err) {
                 // LocalStorage access is denied by security settings
             }

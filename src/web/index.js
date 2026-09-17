@@ -46,7 +46,7 @@ function main() {
         showErrors:          true,
         errorTimeout:        4000,
         attemptHighlight:    true,
-        theme:               "classic",
+        theme:               "dark",
         useMetaKey:          false,
         logLevel:            "info",
         autoMagic:           true,
@@ -67,4 +67,3 @@ window.compileMessage = COMPILE_MSG;
 window.CanvasComponents = CanvasComponents;
 
 document.addEventListener("DOMContentLoaded", main, false);
-
