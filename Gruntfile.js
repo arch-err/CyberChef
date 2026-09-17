@@ -245,6 +245,8 @@ module.exports = function (grunt) {
                     }
                 },
                 devServer: {
+                    host: process.env.CYBERCHEF_DEV_HOST || "localhost",
+                    allowedHosts: (process.env.CYBERCHEF_DEV_ALLOWED_HOSTS || "auto").split(","),
                     port: grunt.option("port") || 8080,
                     client: {
                         logging: "error",
