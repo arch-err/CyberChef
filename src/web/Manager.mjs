@@ -151,7 +151,6 @@ class Manager {
         document.addEventListener("keydown", this.ops.operationPickerKeyboard.bind(this.ops));
         document.getElementById("open-operation-picker").addEventListener("click", this.ops.openOperationPicker.bind(this.ops));
         document.getElementById("add-operation").addEventListener("click", this.ops.openOperationPicker.bind(this.ops));
-        document.getElementById("empty-recipe-add").addEventListener("click", this.ops.openOperationPicker.bind(this.ops));
         document.getElementById("close-operation-picker").addEventListener("click", this.ops.closeOperationPicker.bind(this.ops));
         document.getElementById("close-operation-picker-icon").addEventListener("click", this.ops.closeOperationPicker.bind(this.ops));
         document.getElementById("edit-favourites").addEventListener("click", this.ops.editFavouritesClick.bind(this.ops));

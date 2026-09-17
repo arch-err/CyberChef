@@ -27,12 +27,13 @@ module.exports = {
         // Check that various important elements are loaded
         browser.expect.element("#operations").to.be.present;
         browser.expect.element("#operations").to.not.be.visible;
-        browser.expect.element("#open-operation-picker").to.be.visible;
+        browser.expect.element(".banner-actions").to.not.be.visible;
+        browser.expect.element("#add-operation").to.be.visible;
         browser.expect.element("#recipe").to.be.visible;
         browser.expect.element("#input").to.be.present;
         browser.expect.element("#output").to.be.present;
         browser.expect.element(".op-list").to.be.present;
-        browser.expect.element("#rec-list").to.be.visible;
+        browser.expect.element("#rec-list").to.be.present;
         browser.expect.element("#controls").to.be.visible;
         browser.expect.element("#input-text").to.be.visible;
         browser.expect.element("#output-text").to.be.visible;
