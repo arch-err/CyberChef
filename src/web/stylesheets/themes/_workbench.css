@@ -352,6 +352,15 @@
 :root.dark #controls-content {
     gap: 1px;
     height: 28px;
+    transform: none !important;
+}
+
+:root.dark #controls-content > .bmd-form-group {
+    align-items: center;
+    display: flex;
+    height: 28px;
+    margin: 0;
+    padding: 0;
 }
 
 :root.dark #controls .btn {
