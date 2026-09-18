@@ -51,7 +51,7 @@
     --accent: #009900;
     --surface-raised: #0d0d0d;
     --hairline: #242424;
-    --title-height: 64px;
+    --title-height: 56px;
 }
 
 :root.dark body {
@@ -213,27 +213,31 @@
 }
 
 :root.dark .recipe-heading {
-    display: flex;
-    flex-direction: column;
-    font-size: 15px;
-    gap: 5px;
-    letter-spacing: -0.01em;
-}
-
-:root.dark .eyebrow {
-    color: var(--accent);
-    font-family: var(--fixed-width-font-family);
-    font-size: 9px;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    line-height: 1;
+    color: #e9e9e9;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
 }
 
 :root.dark .pane-controls {
     align-items: center;
-    right: 12px;
-    top: 14px;
+    right: 10px;
+    top: 11px;
+}
+
+:root.dark .recipe-toolbar {
+    gap: 6px;
+}
+
+:root.dark .recipe-toolbar-group {
+    align-items: center;
+    background: #070707;
+    border: 1px solid #222;
+    border-radius: 6px;
+    display: flex;
+    gap: 1px;
+    padding: 2px;
 }
 
 :root.dark .pane-controls .btn,
@@ -242,10 +246,10 @@
     border: 1px solid transparent;
     border-radius: 5px;
     color: #777 !important;
-    height: 34px;
-    min-width: 34px;
-    padding: 5px !important;
-    width: 34px;
+    height: 28px;
+    min-width: 28px;
+    padding: 3px !important;
+    width: 28px;
 }
 
 :root.dark .pane-controls .btn:hover,
@@ -256,7 +260,7 @@
 }
 
 :root.dark .pane-controls .material-icons {
-    font-size: 18px;
+    font-size: 16px;
 }
 
 /* Recipe list */
@@ -339,24 +343,24 @@
     background: transparent;
     border: 0;
     bottom: auto;
-    height: 34px;
+    height: 28px;
     padding: 0;
     position: static;
     width: auto;
 }
 
 :root.dark #controls-content {
-    gap: 2px;
-    height: 34px;
+    gap: 1px;
+    height: 28px;
 }
 
 :root.dark #controls .btn {
     border-radius: 5px;
     font-size: inherit;
-    height: 34px;
-    min-width: 34px;
-    padding: 5px !important;
-    width: 34px;
+    height: 28px;
+    min-width: 28px;
+    padding: 3px !important;
+    width: 28px;
 }
 
 :root.dark #bake img {
@@ -370,11 +374,11 @@
     border-radius: 5px;
     color: #666;
     display: flex;
-    height: 34px;
+    height: 28px;
     justify-content: center;
     margin: 0;
     padding: 0;
-    width: 34px;
+    width: 28px;
 }
 
 :root.dark #auto-bake-label:hover {
@@ -384,6 +388,7 @@
 }
 
 :root.dark #auto-bake-label:has(input:checked) {
+    background: rgba(0, 153, 0, 0.08);
     color: var(--accent);
 }
 
@@ -395,14 +400,18 @@
 }
 
 :root.dark .compact-auto-bake {
-    height: 34px;
+    height: 28px;
     margin: 0;
     padding: 0;
-    width: 34px;
+    width: 28px;
 }
 
 :root.dark .compact-auto-bake .material-icons {
-    font-size: 18px;
+    font-size: 16px;
+}
+
+:root.dark #collapse-recipe {
+    margin-left: 2px;
 }
 
 :root.dark #expand-recipe {
