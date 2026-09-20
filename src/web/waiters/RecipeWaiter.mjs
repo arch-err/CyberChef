@@ -35,9 +35,10 @@ class RecipeWaiter {
 
     /** Collapses the recipe sidebar while leaving a narrow restore control. */
     collapseSidebar() {
-        document.body.classList.add("recipe-collapsed");
-        this.app.initialiseSplitter(true);
-        this.app.columnSplitter.collapse(0);
+        const narrowViewport = window.matchMedia("(max-width: 820px)").matches;
+
+        document.body.classList.remove("recipe-mobile-open");
+        document.body.classList.toggle("recipe-collapsed", !narrowViewport);
         this.app.adjustComponentSizes();
         document.getElementById("expand-recipe").focus();
     }
@@ -46,7 +47,7 @@ class RecipeWaiter {
     /** Restores the recipe sidebar to its default working width. */
     expandSidebar() {
         document.body.classList.remove("recipe-collapsed");
-        this.app.initialiseSplitter(false);
+        document.body.classList.toggle("recipe-mobile-open", window.matchMedia("(max-width: 820px)").matches);
         this.app.adjustComponentSizes();
         document.getElementById("collapse-recipe").focus();
     }

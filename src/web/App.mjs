@@ -629,7 +629,7 @@ class App {
      * Resets the splitter positions to default.
      */
     resetLayout() {
-        document.body.classList.remove("recipe-collapsed");
+        document.body.classList.remove("recipe-collapsed", "recipe-mobile-open");
         this.columnSplitter.setSizes([28, 72]);
         this.ioSplitter.setSizes([50, 50]);
         this.adjustComponentSizes();

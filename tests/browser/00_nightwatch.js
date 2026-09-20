@@ -392,6 +392,21 @@ module.exports = {
             .waitForElementVisible("#expand-recipe", 1000)
             .expect.element("body").to.have.attribute("class").which.contains("recipe-collapsed");
 
+        browser.execute(function() {
+            const ioRect = document.getElementById("IO").getBoundingClientRect();
+            return {
+                documentHeight: document.documentElement.scrollHeight,
+                ioTop: ioRect.top,
+                ioWidth: ioRect.width,
+                viewportHeight: window.innerHeight,
+                viewportWidth: window.innerWidth
+            };
+        }, [], function({value}) {
+            browser.expect(value.ioTop).to.equal(0);
+            browser.expect(value.ioWidth).to.equal(value.viewportWidth);
+            browser.expect(value.documentHeight).to.equal(value.viewportHeight);
+        });
+
         browser
             .click("#expand-recipe")
             .waitForElementNotVisible("#expand-recipe", 1000);

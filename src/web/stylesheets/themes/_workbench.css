@@ -185,11 +185,19 @@
 }
 
 :root.dark .gutter.gutter-horizontal {
-    border-left: 1px solid var(--hairline);
+    background: #0b0b0b;
+    border-left: 1px solid #303030;
+    border-right: 1px solid #161616;
 }
 
 :root.dark .gutter.gutter-vertical {
-    border-top: 1px solid var(--hairline);
+    background: #0b0b0b;
+    border-bottom: 1px solid #161616;
+    border-top: 1px solid #303030;
+}
+
+:root.dark .gutter:hover {
+    background: #151515;
 }
 
 :root.dark .title {
@@ -245,7 +253,7 @@
     background: transparent !important;
     border: 1px solid transparent;
     border-radius: 5px;
-    color: #777 !important;
+    color: #8a8a8a !important;
     height: 28px;
     min-width: 28px;
     padding: 3px !important;
@@ -261,6 +269,15 @@
 
 :root.dark .pane-controls .material-icons {
     font-size: 16px;
+}
+
+:root.dark #input .pane-controls,
+:root.dark #output .pane-controls {
+    background: #070707;
+    border: 1px solid #222;
+    border-radius: 6px;
+    gap: 1px;
+    padding: 2px;
 }
 
 /* Recipe list */
@@ -454,6 +471,16 @@
     display: flex;
 }
 
+:root.dark .recipe-collapsed #recipe,
+:root.dark .recipe-collapsed > #content-wrapper #workspace-wrapper > .gutter-horizontal {
+    display: none !important;
+}
+
+:root.dark .recipe-collapsed #IO {
+    float: none !important;
+    width: 100% !important;
+}
+
 :root.dark .output-maximised #expand-recipe {
     display: none;
 }
@@ -581,6 +608,22 @@
     color: #bbb;
 }
 
+:root.dark #input-wrapper .cm-content > .cm-line:only-child:has(br:only-child)::before,
+:root.dark #output-wrapper .cm-content > .cm-line:only-child:has(br:only-child)::before {
+    color: #555;
+    font-family: var(--primary-font-family);
+    font-size: 12px;
+    pointer-events: none;
+}
+
+:root.dark #input-wrapper .cm-content > .cm-line:only-child:has(br:only-child)::before {
+    content: "Paste or type input";
+}
+
+:root.dark #output-wrapper .cm-content > .cm-line:only-child:has(br:only-child)::before {
+    content: "Output appears here";
+}
+
 :root.dark .bs-tooltip-top .arrow::before {
     border-top-color: #303030;
 }
@@ -688,10 +731,10 @@
 }
 
 :root.dark .operation-picker-meta {
-    color: #666;
+    color: #858585;
     display: flex;
     font-family: var(--fixed-width-font-family);
-    font-size: 9px;
+    font-size: 10px;
     justify-content: space-between;
     letter-spacing: 0.07em;
     padding: 12px 23px 9px;
@@ -734,8 +777,8 @@
 }
 
 :root.dark #search-results b {
-    color: var(--accent);
-    font-weight: 600;
+    color: #f0f0f0;
+    font-weight: 700;
 }
 
 :root.dark .legacy-operations {
@@ -747,11 +790,59 @@
         display: none;
     }
 
-    :root.dark #recipe {
-        min-width: 260px;
+    :root.dark #workspace-wrapper > #recipe,
+    :root.dark #workspace-wrapper > .gutter-horizontal {
+        display: none !important;
+    }
+
+    :root.dark #workspace-wrapper > #IO {
+        float: none !important;
+        height: 100% !important;
+        width: 100% !important;
+    }
+
+    :root.dark #expand-recipe {
+        display: flex;
+    }
+
+    :root.dark .recipe-mobile-open #workspace-wrapper > #recipe {
+        box-shadow: 24px 0 70px rgba(0, 0, 0, 0.72);
+        display: block !important;
+        height: 100% !important;
+        left: 0;
+        min-width: 0;
+        position: absolute !important;
+        top: 0;
+        width: min(360px, calc(100vw - 44px)) !important;
+        z-index: 30;
+    }
+
+    :root.dark .recipe-mobile-open #expand-recipe {
+        display: none;
+    }
+
+    :root.dark .recipe-heading {
+        display: none;
+    }
+
+    :root.dark .recipe-toolbar {
+        gap: 4px;
+        left: 8px;
+        right: 8px;
+        justify-content: flex-end;
+    }
+
+    :root.dark #collapse-recipe {
+        margin-left: 0;
     }
 
     :root.dark .operation-picker {
         padding-top: 72px;
+    }
+}
+
+@media (min-width: 821px) and (max-width: 1100px) {
+    :root.dark .recipe-heading {
+        display: none;
     }
 }
