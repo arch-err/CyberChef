@@ -45,8 +45,7 @@ class OperationsWaiter {
             if (ops.length) {
                 selected = this.getSelectedOp(ops);
                 const operation = ops[selected > -1 ? selected : 0];
-                this.manager.recipe.addOperation(operation.textContent);
-                this.closeOperationPicker();
+                this.commitOperationSelection(operation);
             }
             return;
         }
@@ -140,6 +139,7 @@ class OperationsWaiter {
         const search = document.getElementById("search");
 
         picker.classList.add("is-open");
+        delete picker.dataset.selectionCommitted;
         picker.setAttribute("aria-hidden", "false");
         document.body.classList.add("operation-picker-open");
         search.value = "";
@@ -181,6 +181,16 @@ class OperationsWaiter {
 
         e.preventDefault();
         e.stopImmediatePropagation();
+        this.commitOperationSelection(operation);
+    }
+
+
+    /** Commits at most one operation for each opening of the picker. */
+    commitOperationSelection(operation) {
+        const picker = document.getElementById("operations");
+        if (!picker.classList.contains("is-open") || picker.dataset.selectionCommitted === "true") return;
+
+        picker.dataset.selectionCommitted = "true";
         this.manager.recipe.addOperation(operation.textContent);
         this.closeOperationPicker();
     }
