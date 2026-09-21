@@ -27,6 +27,7 @@ class WindowWaiter {
      * continuous resetting).
      */
     windowResize() {
+        this.app.manager.recipe.syncSidebarForViewport();
         debounce(this.app.adjustComponentSizes, 200, "windowResize", this.app, [])();
     }
 

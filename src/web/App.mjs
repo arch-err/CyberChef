@@ -321,7 +321,7 @@ class App {
         this.columnSplitter = Split(["#recipe", "#IO"], {
             sizes: [28, 72],
             minSize: minimise ? [0, 0] : [280, 450],
-            gutterSize: 4,
+            gutterSize: 8,
             expandToMin: true,
             onDrag: debounce(function() {
                 this.adjustComponentSizes();
@@ -330,7 +330,7 @@ class App {
 
         this.ioSplitter = Split(["#input", "#output"], {
             direction: "vertical",
-            gutterSize: 4,
+            gutterSize: 8,
             minSize: minimise ? [0, 0] : [100, 100]
         });
 

@@ -174,6 +174,8 @@ class Manager {
         this.addDynamicListener("textarea.arg", "drop", this.recipe.textArgDrop, this.recipe);
         document.getElementById("collapse-recipe").addEventListener("click", this.recipe.collapseSidebar.bind(this.recipe));
         document.getElementById("expand-recipe").addEventListener("click", this.recipe.expandSidebar.bind(this.recipe));
+        document.getElementById("recipe-drawer-backdrop").addEventListener("click", this.recipe.collapseSidebar.bind(this.recipe));
+        document.addEventListener("keydown", this.recipe.sidebarKeydown.bind(this.recipe));
 
         // Input
         document.getElementById("reset-layout").addEventListener("click", this.app.resetLayout.bind(this.app));

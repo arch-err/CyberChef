@@ -412,6 +412,21 @@ module.exports = {
             .waitForElementNotVisible("#expand-recipe", 1000);
     },
 
+    "Mobile recipe drawer can be dismissed": browser => {
+        browser
+            .resizeWindow(390, 844)
+            .waitForElementVisible("#expand-recipe", 1000)
+            .click("#expand-recipe")
+            .waitForElementVisible("#recipe-drawer-backdrop", 1000)
+            .keys(browser.Keys.ESCAPE)
+            .waitForElementNotVisible("#recipe-drawer-backdrop", 1000)
+            .click("#expand-recipe")
+            .waitForElementVisible("#recipe-drawer-backdrop", 1000)
+            .click("#recipe-drawer-backdrop")
+            .waitForElementNotVisible("#recipe-drawer-backdrop", 1000)
+            .resizeWindow(1280, 800);
+    },
+
     "Alert bar": browser => {
         // Bake nothing to create an empty output which can be copied
         utils.clear(browser);

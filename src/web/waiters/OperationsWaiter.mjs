@@ -164,6 +164,8 @@ class OperationsWaiter {
             e.preventDefault();
             this.openOperationPicker();
         } else if (e.key === "Escape" && document.getElementById("operations").classList.contains("is-open")) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
             this.closeOperationPicker();
         }
     }

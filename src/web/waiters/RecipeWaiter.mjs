@@ -39,6 +39,7 @@ class RecipeWaiter {
 
         document.body.classList.remove("recipe-mobile-open");
         document.body.classList.toggle("recipe-collapsed", !narrowViewport);
+        this.setMobileDrawerAccessibility(false);
         this.app.adjustComponentSizes();
         document.getElementById("expand-recipe").focus();
     }
@@ -46,10 +47,68 @@ class RecipeWaiter {
 
     /** Restores the recipe sidebar to its default working width. */
     expandSidebar() {
+        const narrowViewport = window.matchMedia("(max-width: 820px)").matches;
+
         document.body.classList.remove("recipe-collapsed");
-        document.body.classList.toggle("recipe-mobile-open", window.matchMedia("(max-width: 820px)").matches);
+        document.body.classList.toggle("recipe-mobile-open", narrowViewport);
+        this.setMobileDrawerAccessibility(narrowViewport);
         this.app.adjustComponentSizes();
         document.getElementById("collapse-recipe").focus();
+    }
+
+
+    /** Keeps background controls and ARIA state in sync with the mobile drawer. */
+    setMobileDrawerAccessibility(open) {
+        const io = document.getElementById("IO"),
+            backdrop = document.getElementById("recipe-drawer-backdrop"),
+            expandButton = document.getElementById("expand-recipe");
+
+        io.inert = open;
+        backdrop.setAttribute("aria-hidden", (!open).toString());
+        expandButton.setAttribute("aria-expanded", open.toString());
+    }
+
+
+    /** Closes and traps keyboard navigation inside the mobile recipe drawer. */
+    sidebarKeydown(e) {
+        if (!document.body.classList.contains("recipe-mobile-open")) return;
+
+        if (e.key === "Escape") {
+            e.preventDefault();
+            this.collapseSidebar();
+            return;
+        }
+
+        if (e.key !== "Tab") return;
+
+        const focusable = Array.from(document.querySelectorAll(
+            "#recipe button:not([disabled]), #recipe input:not([disabled]), #recipe select:not([disabled]), #recipe textarea:not([disabled]), #recipe [tabindex]:not([tabindex='-1'])"
+        )).filter(el => el.offsetParent !== null);
+
+        if (!focusable.length) return;
+
+        const first = focusable[0],
+            last = focusable[focusable.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+        } else if (!document.getElementById("recipe").contains(document.activeElement)) {
+            e.preventDefault();
+            first.focus();
+        }
+    }
+
+
+    /** Removes mobile-only state when returning to a desktop viewport. */
+    syncSidebarForViewport() {
+        if (window.matchMedia("(max-width: 820px)").matches) return;
+
+        document.body.classList.remove("recipe-mobile-open");
+        this.setMobileDrawerAccessibility(false);
     }
 
 
