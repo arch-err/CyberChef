@@ -68,6 +68,7 @@ module.exports = {
     "Operations loaded": browser => {
         browser
             .useCss()
+            .click("#clr-recipe")
             .click("#add-operation")
             .waitForElementVisible("#operations", 1000)
             .useXpath();
@@ -381,8 +382,14 @@ module.exports = {
             .setValue("#search", "md5")
             .useXpath()
             .waitForElementVisible("//ul[@id='search-results']//b[text()='MD5']", 1000)
+            .click("//ul[@id='search-results']//b[text()='MD5']")
             .useCss()
-            .click("#close-operation-picker-icon");
+            .execute(function() {
+                return document.querySelectorAll("#rec-list li.operation").length;
+            }, [], function({value}) {
+                browser.expect(value).to.equal(1);
+            })
+            .click("#clr-recipe");
     },
 
     "Recipe sidebar can be folded": browser => {

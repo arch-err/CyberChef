@@ -39,6 +39,8 @@ class OperationsWaiter {
 
         if ((e.type === "search" && e.target.value !== "") || e.keyCode === 13) { // Search (non-empty) or Return
             e.preventDefault();
+            e.stopImmediatePropagation();
+            if (!document.getElementById("operations").classList.contains("is-open")) return;
             ops = document.querySelectorAll("#search-results li");
             if (ops.length) {
                 selected = this.getSelectedOp(ops);
@@ -173,9 +175,12 @@ class OperationsWaiter {
 
     /** Adds a clicked picker result to the recipe. */
     operationClick(e) {
-        const operation = e.target.closest("li.operation");
-        if (!operation || !operation.closest("#search-results")) return;
+        const operation = e.target.closest("li.operation"),
+            picker = document.getElementById("operations");
+        if (!operation || !operation.closest("#search-results") || !picker.classList.contains("is-open")) return;
 
+        e.preventDefault();
+        e.stopImmediatePropagation();
         this.manager.recipe.addOperation(operation.textContent);
         this.closeOperationPicker();
     }

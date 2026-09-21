@@ -354,12 +354,7 @@
 
 :root.dark .recipe-add-operation > i {
     color: var(--accent);
-    font-size: 20px;
-}
-
-:root.dark .recipe-add-operation > span {
-    font-size: 12px;
-    font-weight: 550;
+    font-size: 22px;
 }
 
 :root.dark #controls {
@@ -439,7 +434,16 @@
 }
 
 :root.dark .compact-auto-bake .material-icons {
+    height: 16px;
+    left: 50%;
+    line-height: 16px;
     font-size: 16px;
+    margin: 0;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
 }
 
 :root.dark #collapse-recipe {
