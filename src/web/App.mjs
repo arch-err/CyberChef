@@ -591,32 +591,8 @@ class App {
         for (let i = 0; i < recipeConfig.length; i++) {
             const item = this.manager.recipe.addOperation(recipeConfig[i].op);
 
-            // Populate arguments
             log.debug(`Populating arguments for ${recipeConfig[i].op}`);
-            const args = item.querySelectorAll(".arg");
-            for (let j = 0; j < args.length; j++) {
-                if (recipeConfig[i].args[j] === undefined) continue;
-                if (args[j].getAttribute("type") === "checkbox") {
-                    // checkbox
-                    args[j].checked = recipeConfig[i].args[j];
-                } else if (args[j].classList.contains("toggle-string")) {
-                    // toggleString
-                    args[j].value = recipeConfig[i].args[j].string;
-                    args[j].parentNode.parentNode.querySelector("button").innerHTML =
-                        Utils.escapeHtml(recipeConfig[i].args[j].option);
-                } else {
-                    // all others
-                    args[j].value = recipeConfig[i].args[j];
-                }
-            }
-
-            // Set disabled and breakpoint
-            if (recipeConfig[i].disabled) {
-                item.querySelector(".disable-icon").click();
-            }
-            if (recipeConfig[i].breakpoint) {
-                item.querySelector(".breakpoint").click();
-            }
+            this.manager.recipe.populateOperation(item, recipeConfig[i]);
 
             this.manager.recipe.triggerArgEvents(item);
 

@@ -318,7 +318,7 @@
     color: #eee;
     font-size: 13px;
     font-weight: 580;
-    padding-right: 72px;
+    padding-right: 126px;
 }
 
 :root.dark .recip-icons {
@@ -329,7 +329,19 @@
 :root.dark .recip-icons i {
     color: #666;
     font-size: 16px;
-    margin-right: 7px;
+}
+
+:root.dark .operation-action {
+    border-radius: 4px;
+    color: #666;
+    font-size: 16px;
+}
+
+:root.dark .operation-action:hover,
+:root.dark .operation-action:focus-visible {
+    background: #151515;
+    color: #009900;
+    outline: none;
 }
 
 :root.dark .recipe-add-operation {

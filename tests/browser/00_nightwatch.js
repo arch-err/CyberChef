@@ -166,6 +166,45 @@ module.exports = {
             .waitForElementNotPresent(op);
     },
 
+    "Recipe operations can be duplicated and removed": browser => {
+        const firstOperation = "#rec-list li.operation:nth-of-type(1)",
+            secondOperation = "#rec-list li.operation:nth-of-type(2)";
+
+        browser
+            .useCss()
+            .waitForElementNotPresent("#preloader", 10000)
+            .click("#clr-recipe")
+            .urlHash("recipe=JWT_Verify('original secret')")
+            .waitForElementVisible(`${firstOperation} .duplicate-operation`, 2000)
+            .execute(function() {
+                const arg = document.querySelector("#rec-list li.operation textarea.arg");
+                arg.value = "copied secret";
+                arg.dispatchEvent(new Event("input", {bubbles: true}));
+            })
+            .click(`${firstOperation} .disable-icon`)
+            .click(`${firstOperation} .breakpoint`)
+            .click(`${firstOperation} .hide-args-icon`)
+            .click(`${firstOperation} .duplicate-operation`)
+            .waitForElementVisible(`${secondOperation} .remove-operation`, 1000)
+            .execute(function() {
+                const operations = Array.from(document.querySelectorAll("#rec-list li.operation"));
+                return {
+                    count: operations.length,
+                    config: window.app.getRecipeConfig(),
+                    duplicateArgsHidden: operations[1].querySelector(".ingredients").style.display === "none"
+                };
+            }, [], function({value}) {
+                browser.expect(value.count).to.equal(2);
+                browser.expect(value.config[1].args[0]).to.equal("copied secret");
+                browser.expect(value.config[1].disabled).to.equal(true);
+                browser.expect(value.config[1].breakpoint).to.equal(true);
+                browser.expect(value.duplicateArgsHidden).to.equal(true);
+            })
+            .click(`${firstOperation} .remove-operation`)
+            .waitForElementNotPresent(secondOperation)
+            .expect.element(`${firstOperation} textarea.arg`).to.have.value.that.equals("copied secret");
+    },
+
     /**
      * Dragging an operation that is already in the recipe fires the same dragover and drop events on
      * any text argument it passes over as a text drag from outside the app does. Only the

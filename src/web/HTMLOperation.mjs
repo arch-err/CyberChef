@@ -93,6 +93,8 @@ class HTMLOperation {
             <i class="material-icons breakpoint" title="Set breakpoint" break="false" data-help-title="Setting breakpoints" data-help="Setting a breakpoint on an operation will cause execution of the Recipe to pause when it reaches that operation.">pause</i>
             <i class="material-icons disable-icon" title="Disable operation" disabled="false" data-help-title="Disabling operations" data-help="Disabling an operation will prevent it from being executed when the Recipe is baked. Execution will skip over the disabled operation and continue with subsequent operations.">not_interested</i>
             <i class="material-icons hide-args-icon" title="Hide operation's arguments" hide-args="false" data-help-title="Hide operation's arguments" data-help="Hiding an operation's argument will save space in the Recipe window. Execution will still take place with the selected argument options.">keyboard_arrow_up</i>
+            <button type="button" class="material-icons operation-action duplicate-operation" aria-label="Duplicate operation" title="Duplicate operation">content_copy</button>
+            <button type="button" class="material-icons operation-action remove-operation" aria-label="Remove operation" title="Remove operation">delete_outline</button>
         </div>
         <div class="clearfix">&nbsp;</div>`;
 

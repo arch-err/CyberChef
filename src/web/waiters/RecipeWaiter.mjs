@@ -394,6 +394,57 @@ class RecipeWaiter {
 
 
     /**
+     * Duplicates an operation immediately after the source operation, including its current
+     * arguments and execution state.
+     *
+     * @fires Manager#operationadd
+     * @param {event} e
+     */
+    duplicateOperationClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const source = e.target.closest("li.operation"),
+            operations = Array.from(document.querySelectorAll("#rec-list li.operation")),
+            config = this.getConfig()[operations.indexOf(source)],
+            item = this.createOperation(config.op);
+
+        this.populateOperation(item, config);
+
+        const sourceHideIcon = source.querySelector(".hide-args-icon");
+        if (sourceHideIcon?.getAttribute("hide-args") === "true") {
+            const hideIcon = item.querySelector(".hide-args-icon");
+            hideIcon.setAttribute("hide-args", "true");
+            hideIcon.innerText = "keyboard_arrow_down";
+            hideIcon.classList.add("hide-args-selected");
+            item.querySelector(".ingredients").style.display = "none";
+        }
+
+        source.after(item);
+        item.dispatchEvent(this.manager.operationadd);
+        item.querySelector(".duplicate-operation").focus();
+    }
+
+
+    /**
+     * Removes the operation containing the clicked remove control.
+     *
+     * @fires Manager#operationremove
+     * @param {event} e
+     */
+    removeOperationClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const operation = e.target.closest("li.operation"),
+            recipe = document.getElementById("rec-list");
+
+        operation.remove();
+        recipe.dispatchEvent(this.manager.operationremove);
+    }
+
+
+    /**
      * Handler for operation doubleclick events.
      * Removes the operation from the recipe and auto bakes.
      *
@@ -518,6 +569,60 @@ class RecipeWaiter {
 
 
     /**
+     * Creates a fully rendered operation without inserting it into the recipe.
+     *
+     * @param {string} name - The operation name
+     * @returns {element}
+     */
+    createOperation(name) {
+        const item = document.createElement("li");
+
+        item.classList.add("operation");
+        item.innerHTML = DOMPurify.sanitize(name);
+        this.buildRecipeOperation(item);
+
+        return item;
+    }
+
+
+    /**
+     * Applies saved arguments and execution state to a rendered operation.
+     *
+     * @param {element} item - The rendered operation
+     * @param {Object} config - The operation configuration
+     */
+    populateOperation(item, config) {
+        const args = item.querySelectorAll(".arg");
+
+        for (let i = 0; i < args.length; i++) {
+            if (config.args[i] === undefined) continue;
+
+            if (args[i].getAttribute("type") === "checkbox") {
+                args[i].checked = config.args[i];
+            } else if (args[i].classList.contains("toggle-string")) {
+                args[i].value = config.args[i].string;
+                args[i].parentNode.parentNode.querySelector("button").textContent = config.args[i].option;
+            } else {
+                args[i].value = config.args[i];
+            }
+        }
+
+        if (config.disabled) {
+            const disableIcon = item.querySelector(".disable-icon");
+            disableIcon.setAttribute("disabled", "true");
+            disableIcon.classList.add("disable-icon-selected");
+            item.classList.add("disabled");
+        }
+
+        if (config.breakpoint) {
+            const breakpoint = item.querySelector(".breakpoint");
+            breakpoint.setAttribute("break", "true");
+            breakpoint.classList.add("breakpoint-selected");
+        }
+    }
+
+
+    /**
      * Adds the specified operation to the recipe.
      *
      * @fires Manager#operationadd
@@ -525,13 +630,7 @@ class RecipeWaiter {
      * @returns {element}
      */
     addOperation(name) {
-        const item = document.createElement("li");
-
-        item.classList.add("operation");
-        const clean = DOMPurify.sanitize(name);
-        item.innerHTML = clean;
-
-        this.buildRecipeOperation(item);
+        const item = this.createOperation(name);
         document.getElementById("rec-list").appendChild(item);
 
         item.dispatchEvent(this.manager.operationadd);
