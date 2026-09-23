@@ -64,7 +64,7 @@ module.exports = {
             "process.browser": "true"
         }),
         new MiniCssExtractPlugin({
-            filename: "assets/[name].css"
+            filename: "assets/[name].[contenthash:12].css"
         }),
         new CompressionPlugin({
             filename: "[path][base].gz",
